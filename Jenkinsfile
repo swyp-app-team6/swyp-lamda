@@ -4,6 +4,7 @@ pipeline {
     environment {
         SLACK_CHANNEL = "#6팀-PR"
         AWS_REGION    = "ap-northeast-2"
+        NODE_VERSION  = "24"
     }
 
     triggers {
@@ -24,12 +25,13 @@ pipeline {
             steps {
                 echo 'Deploying thumbnail Lambda...'
                 dir('functions/thumbnail') {
+                    sh 'node --version'
                     sh 'npm install'
                     sh 'zip -r function.zip index.js node_modules package.json'
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-lambda-deploy']]) {
                         sh """
                             aws lambda update-function-code \
-                                --function-name swiipe-thumbnail-lambda \
+                                --function-name swyp-thumbnail-lambda \
                                 --zip-file fileb://function.zip \
                                 --region ${AWS_REGION}
                         """
