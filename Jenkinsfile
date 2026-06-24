@@ -28,14 +28,12 @@ pipeline {
                     sh 'node --version'
                     sh 'npm install'
                     sh 'zip -r function.zip index.js node_modules package.json'
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-lambda-deploy']]) {
-                        sh """
-                            aws lambda update-function-code \
-                                --function-name swyp-thumbnail-lambda \
-                                --zip-file fileb://function.zip \
-                                --region ${AWS_REGION}
-                        """
-                    }
+                    sh """
+                        aws lambda update-function-code \
+                        --function-name swyp-thumbnail-lambda \
+                        --zip-file fileb://function.zip \
+                        --region ${AWS_REGION}
+                    """
                     sh 'rm -f function.zip'
                 }
             }
@@ -43,6 +41,9 @@ pipeline {
     }
 
     post {
+        always {
+            cleanWs()
+        }
         success {
             echo 'Pipeline successfully completed!'
             slackSend(
