@@ -19,9 +19,9 @@ pipeline {
         }
 
         stage('Deploy thumbnail Lambda') {
-            when {
-                changeset "functions/thumbnail/**"
-            }
+//             when { // 최초 배포 시에는 사용 불가
+//                 changeset "functions/thumbnail/**"
+//             }
             steps {
                 echo 'Deploying thumbnail Lambda...'
                 dir('functions/thumbnail') {
